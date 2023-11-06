@@ -5,7 +5,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/df-mc/atomic"
-	"github.com/sandertv/go-raknet/internal/message"
+	"github.com/OpenFarLands/go-raknet/internal/message"
 	"net"
 	"sync"
 	"time"
