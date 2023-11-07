@@ -161,7 +161,9 @@ func (listener *Listener) listen() {
 
 		// Technically we should not re-use the same byte slice after its ownership has been taken by the
 		// buffer, but we can do this anyway because we copy the data later.
-		listener.handle(buf, addr)
+		if err := listener.handle(buf, addr); err != nil {
+			listener.log.Printf("listener: error handling packet (addr = %v): %v\n", addr, err)
+		}
 		buf.Reset()
 	}
 }
