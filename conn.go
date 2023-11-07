@@ -15,7 +15,7 @@ const (
 	// currentProtocol is the current RakNet protocol version. This is Minecraft specific.
 	currentProtocol byte = 11
 
-	maxMTUSize    = 1400
+	maxMTUSize    = 9000
 	maxWindowSize = 2048
 )
 
@@ -88,7 +88,7 @@ func newConn(conn net.PacketConn, addr net.Addr, mtuSize uint16) *Conn {
 // if the connection should limit the bounds of things such as the size of packets. This is generally recommended for
 // connections coming from a client.
 func newConnWithLimits(conn net.PacketConn, addr net.Addr, mtuSize uint16, limits bool) *Conn {
-	if mtuSize < 500 || mtuSize > 1500 {
+	if mtuSize < 500 || mtuSize > 9000 {
 		mtuSize = maxMTUSize
 	}
 	c := &Conn{
