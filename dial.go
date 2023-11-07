@@ -226,7 +226,7 @@ func (dialer Dialer) DialContext(ctx context.Context, address string) (*Conn, er
 	state := &connState{
 		conn:               udpConn,
 		remoteAddr:         udpConn.RemoteAddr(),
-		discoveringMTUSize: 3000,
+		discoveringMTUSize: 9000,
 		id:                 id,
 	}
 	wrap := func(ctx context.Context, err error) error {
@@ -431,7 +431,7 @@ func (state *connState) discoverMTUSize(ctx context.Context) (e error) {
 			if err := response.Read(buffer); err != nil {
 				return fmt.Errorf("error reading open connection reply 1: %v", err)
 			}
-			if response.ServerPreferredMTUSize < 400 || response.ServerPreferredMTUSize > 3000 {
+			if response.ServerPreferredMTUSize < 400 || response.ServerPreferredMTUSize > 9000 {
 				// This is an awful hack we cooked up to deal with OVH 'DDoS' protection. For some reason they
 				// send a broken MTU size first. Sending a Request2 followed by a Request1 deals with this.
 				_ = state.sendOpenConnectionRequest2(response.ServerPreferredMTUSize)
