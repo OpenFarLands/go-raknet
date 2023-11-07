@@ -154,7 +154,7 @@ func (dialer Dialer) PingContext(ctx context.Context, address string) (response 
 	}
 	buffer.Reset()
 
-	data := make([]byte, 3000)
+	data := make([]byte, 9000)
 	n, err := conn.Read(data)
 	if err != nil {
 		return nil, &net.OpError{Op: "ping", Net: "raknet", Source: nil, Addr: nil, Err: actual(err)}
@@ -277,7 +277,7 @@ func (conn *wrappedConn) WriteTo(b []byte, _ net.Addr) (n int, err error) {
 func clientListen(rakConn *Conn, conn net.Conn, errorLog *log.Logger) {
 	// Create a buffer with the maximum size a UDP packet sent over RakNet is allowed to have. We can re-use
 	// this buffer for each packet.
-	b := make([]byte, 3000)
+	b := make([]byte, 9000)
 	buf := bytes.NewBuffer(b[:0])
 	for {
 		n, err := conn.Read(b)
@@ -345,7 +345,7 @@ func (state *connState) openConnectionRequest(ctx context.Context) (e error) {
 		}
 	}()
 
-	b := make([]byte, 3000)
+	b := make([]byte, 9000)
 	for {
 		// Start reading in a loop so that we can find open connection reply 2 packets.
 		n, err := state.conn.Read(b)
@@ -413,7 +413,7 @@ func (state *connState) discoverMTUSize(ctx context.Context) (e error) {
 		}
 	}()
 
-	b := make([]byte, 3000)
+	b := make([]byte, 9000)
 	for {
 		// Start reading in a loop so that we can find open connection reply 1 packets.
 		n, err := state.conn.Read(b)
