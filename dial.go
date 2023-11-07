@@ -154,7 +154,7 @@ func (dialer Dialer) PingContext(ctx context.Context, address string) (response 
 	}
 	buffer.Reset()
 
-	data := make([]byte, 9000)
+	data := make([]byte, 1492)
 	n, err := conn.Read(data)
 	if err != nil {
 		return nil, &net.OpError{Op: "ping", Net: "raknet", Source: nil, Addr: nil, Err: actual(err)}
@@ -226,7 +226,7 @@ func (dialer Dialer) DialContext(ctx context.Context, address string) (*Conn, er
 	state := &connState{
 		conn:               udpConn,
 		remoteAddr:         udpConn.RemoteAddr(),
-		discoveringMTUSize: 9000,
+		discoveringMTUSize: 1492,
 		id:                 id,
 	}
 	wrap := func(ctx context.Context, err error) error {
@@ -277,7 +277,7 @@ func (conn *wrappedConn) WriteTo(b []byte, _ net.Addr) (n int, err error) {
 func clientListen(rakConn *Conn, conn net.Conn, errorLog *log.Logger) {
 	// Create a buffer with the maximum size a UDP packet sent over RakNet is allowed to have. We can re-use
 	// this buffer for each packet.
-	b := make([]byte, 9000)
+	b := make([]byte, 1500)
 	buf := bytes.NewBuffer(b[:0])
 	for {
 		n, err := conn.Read(b)
@@ -345,7 +345,7 @@ func (state *connState) openConnectionRequest(ctx context.Context) (e error) {
 		}
 	}()
 
-	b := make([]byte, 9000)
+	b := make([]byte, 1492)
 	for {
 		// Start reading in a loop so that we can find open connection reply 2 packets.
 		n, err := state.conn.Read(b)
@@ -413,7 +413,7 @@ func (state *connState) discoverMTUSize(ctx context.Context) (e error) {
 		}
 	}()
 
-	b := make([]byte, 9000)
+	b := make([]byte, 1492)
 	for {
 		// Start reading in a loop so that we can find open connection reply 1 packets.
 		n, err := state.conn.Read(b)
@@ -431,7 +431,7 @@ func (state *connState) discoverMTUSize(ctx context.Context) (e error) {
 			if err := response.Read(buffer); err != nil {
 				return fmt.Errorf("error reading open connection reply 1: %v", err)
 			}
-			if response.ServerPreferredMTUSize < 400 || response.ServerPreferredMTUSize > 9000 {
+			if response.ServerPreferredMTUSize < 400 || response.ServerPreferredMTUSize > 1500 {
 				// This is an awful hack we cooked up to deal with OVH 'DDoS' protection. For some reason they
 				// send a broken MTU size first. Sending a Request2 followed by a Request1 deals with this.
 				_ = state.sendOpenConnectionRequest2(response.ServerPreferredMTUSize)
