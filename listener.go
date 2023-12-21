@@ -58,7 +58,7 @@ type Listener struct {
 }
 
 // listenerID holds the next ID to use for a Listener.
-var listenerID = atomic.NewInt64(rand.New(rand.NewSource(time.Now().Unix())).Int63())
+var listenerID = atomic.NewInt64(rand.New(rand.NewSource(time.Now().UnixNano())).Int63())
 
 // Listen listens on the address passed and returns a listener that may be used to accept connections. If not
 // successful, an error is returned.
